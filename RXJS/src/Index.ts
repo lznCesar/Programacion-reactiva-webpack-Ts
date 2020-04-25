@@ -1,26 +1,61 @@
-//siempre que veamos esta insturccion es que importamos
-// algo para poder crear un observable.
 
-import { Observer, interval, timer, range, from, fromEvent,} from "rxjs";
-import { map } from "rxjs/operators";
-import { displayLog } from "./Utils/utils";
+import { lorem, displayLog } from './Utils/utils'
+import { fromEvent } from 'rxjs';
+import { pluck, map, tap, filter } from 'rxjs/operators';
 
-// cuando se le agrega el signo de dolar al final de una constante es para
-// remarcar que esa constante es un observable.
 
-const observer: Observer<any> = {
-  next: (value) => displayLog(`[Next]  ${value}`),
-  error: (error) => console.error("[Error Observable] ", error),
-  complete: () => displayLog("[Complete]"),
-};
+const ul = document.createElement("ul");
+ul.classList.add("navbar");
 
-range(1,5).pipe(
+const ArrayLinks: Array<string> = [
+  "Inicio",
+  "Sobre Nosotros",
+  "Servicios",
+  "Contactanos",
+];
 
-  map((valor) =>  valor * 10))
-  // .subscribe(observer)
+ArrayLinks.forEach((link) => {
+  const li = document.createElement("li");
+  li.innerText = link;
+  ul.appendChild(li);
+});
 
-const Keyup$ = fromEvent<KeyboardEvent>(document,'keyup')
+document.querySelector("body")?.
+insertBefore(ul, document.querySelector("h1"));
 
-Keyup$.pipe(
-  map<KeyboardEvent,string>((event)=>event.code)
-).subscribe(observer)
+
+const progressBar = document.createElement("div");
+progressBar.classList.add('progress-bar')
+
+document.querySelector("body")?.
+insertBefore(progressBar, document.querySelector("h1"));
+
+const p = document.createElement('p')
+p.innerText = lorem
+displayLog (p.innerText)
+
+
+// funcion que realice el calculo
+
+const calcularScroll = (event:any) => {
+  
+  const { scrollTop, scrollHeight, clientHeight} = event
+  return (scrollTop/(scrollHeight - clientHeight)) * 100
+}
+
+
+const scroll$ = fromEvent(document,'scroll')
+
+scroll$.pipe(
+  pluck('target','documentElement'),
+  map((eventFiltrado:any)=> calcularScroll(eventFiltrado)),
+  tap ((value)=>console.log(value))
+)
+.subscribe((porcentaje)=>{
+  if (porcentaje > 2){
+    ul.style.display = 'none'
+  }else{
+  ul.style.display = 'flex'}
+  progressBar.style.width = `${porcentaje}%`
+});
+

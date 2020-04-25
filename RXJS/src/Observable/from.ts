@@ -2,7 +2,7 @@
 // algo para poder crear un observable.
 
 import { Observer,  from, of } from "rxjs";
-import { displayLog } from "./Utils/utils";
+import { displayLog } from "./../Utils/utils";
 
 // cuando se le agrega el signo de dolar al final de una constante es para
 // remarcar que esa constante es un observable.

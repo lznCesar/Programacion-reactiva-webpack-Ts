@@ -4,7 +4,7 @@
   "description": "Practica introductora a la programación reactiva",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server"
+    "start": " clear && webpack-dev-server"
   },
   "keywords": [
     "Reactive",
