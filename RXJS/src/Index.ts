@@ -1,61 +1,21 @@
+import { Observer, fromEvent, asyncScheduler, interval} from "rxjs";
+import {  pluck, throttleTime, map, sampleTime, sample } from "rxjs/operators";
+import { displayLog } from "./Utils/utils";
 
-import { lorem, displayLog } from './Utils/utils'
-import { fromEvent } from 'rxjs';
-import { pluck, map, tap, filter } from 'rxjs/operators';
+const observer: Observer<any> = {
+  next: (value) => displayLog(`[Next]  ${JSON.stringify(value)}`),
+  error: (error) => console.error("[Error Observable] ", error),
+  complete: () => displayLog("[Complete]"),
+};
 
+const click$ = fromEvent<MouseEvent>(document,'click')
+/*******************sample*******************
 
-const ul = document.createElement("ul");
-ul.classList.add("navbar");
+*************************************/
 
-const ArrayLinks: Array<string> = [
-  "Inicio",
-  "Sobre Nosotros",
-  "Servicios",
-  "Contactanos",
-];
+const interval$ = interval(1000)
 
-ArrayLinks.forEach((link) => {
-  const li = document.createElement("li");
-  li.innerText = link;
-  ul.appendChild(li);
-});
-
-document.querySelector("body")?.
-insertBefore(ul, document.querySelector("h1"));
-
-
-const progressBar = document.createElement("div");
-progressBar.classList.add('progress-bar')
-
-document.querySelector("body")?.
-insertBefore(progressBar, document.querySelector("h1"));
-
-const p = document.createElement('p')
-p.innerText = lorem
-displayLog (p.innerText)
-
-
-// funcion que realice el calculo
-
-const calcularScroll = (event:any) => {
-  
-  const { scrollTop, scrollHeight, clientHeight} = event
-  return (scrollTop/(scrollHeight - clientHeight)) * 100
-}
-
-
-const scroll$ = fromEvent(document,'scroll')
-
-scroll$.pipe(
-  pluck('target','documentElement'),
-  map((eventFiltrado:any)=> calcularScroll(eventFiltrado)),
-  tap ((value)=>console.log(value))
+interval$.pipe(
+  sample(click$)
 )
-.subscribe((porcentaje)=>{
-  if (porcentaje > 2){
-    ul.style.display = 'none'
-  }else{
-  ul.style.display = 'flex'}
-  progressBar.style.width = `${porcentaje}%`
-});
-
+.subscribe(observer)

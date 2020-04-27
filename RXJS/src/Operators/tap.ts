@@ -3,8 +3,8 @@
 
 import { Observer, range, from, fromEvent} from "rxjs";
 import { filter, pluck, map, tap } from "rxjs/operators";
-import { displayLog } from "./Utils/utils";
-import {Empleado2} from "./Interfaces/interfaces"
+import { displayLog } from "./../Utils/utils";
+import {Empleado2} from "./../Interfaces/interfaces"
 // cuando se le agrega el signo de dolar al final de una constante es para
 // remarcar que esa constante es un observable.
 
