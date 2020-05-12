@@ -1,5 +1,5 @@
-import { Observer, fromEvent, asyncScheduler, interval} from "rxjs";
-import {  pluck, throttleTime, map, sampleTime, sample } from "rxjs/operators";
+import { Observer, fromEvent, asyncScheduler, interval, timer} from "rxjs";
+import {  pluck, throttleTime, map, sampleTime, sample, switchMap } from "rxjs/operators";
 import { displayLog } from "./Utils/utils";
 
 const observer: Observer<any> = {
@@ -9,13 +9,17 @@ const observer: Observer<any> = {
 };
 
 const click$ = fromEvent<MouseEvent>(document,'click')
-/*******************sample*******************
+const timer$ = timer(0,1000);
+/*******************switchMap*******************
 
 *************************************/
 
-const interval$ = interval(1000)
+// click$.subscribe((valor)=> {
+//   timer$.subscribe((valor)=> console.log(valor))
+// })
 
-interval$.pipe(
-  sample(click$)
+
+click$.pipe(
+  switchMap((x)=>timer$)
+).subscribe(valor=> console.log(valor)
 )
-.subscribe(observer)
